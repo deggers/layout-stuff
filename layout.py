@@ -3,6 +3,7 @@ import operator
 import string
 
 chars = string.ascii_lowercase[:26]
+allCols = []
 
 with open('data.json') as json_file:
     data = json.load(json_file)
@@ -58,8 +59,8 @@ with open('data.json') as json_file:
 
     for key in trigrams:      
         if (trigrams[key] == 0):
-            print(f'{key}: {trigrams[key]:.20f} ')
-
+            if frozenset(tuple(key)) not in allCols:
+                allCols.append(tuple(key))
 
     for key, value in data['bigrams'].items():
         share = (value/totalBigrams) * 100
@@ -68,6 +69,23 @@ with open('data.json') as json_file:
             bigrams[sortedCol] = bigrams[sortedCol] + share
 
     sbigrams = sorted(bigrams.items(), key=lambda x: x[1], reverse=True)
-#    for key, value in sbigrams:      
-#     print(f'{key}: {value:.2f} ', end='\n')
 
+    
+    for key, value in sbigrams:
+        allCols.append(tuple(key))
+
+layouts = []
+for col1 in allCols:
+    for col2 in allCols[1:]:
+        for col3 in allCols[2:]: 
+            for col4 in allCols[3:]:
+                for col5 in allCols[4:]:
+                    for col6 in allCols[5:]:
+                        doubles = set(col1).intersection(set(col2)).intersection(set(col3)).intersection(set(col4)).intersection(set(col5)).intersection(set(col6))
+                        print(doubles)
+                        if len(doubles) > 0:
+                            continue
+                        candidate = {col1,col2,col3,col4,col5,col6}     
+        if frozenset(candidate) not in layouts and len(candidate) ==6:
+            layouts.append(candidate)
+            print(candidate)
